@@ -1,4 +1,5 @@
 import random
+import sys
 
 class MineSweeper():
     def __init__(self, rows=10, columns=10, mines=10):
@@ -93,19 +94,28 @@ class MineSweeper():
     def check_input(self):
         while True:
             try:
-                a, b = (int(i) for i in input(
+                print("Для выхода введите 'quit'.")
+                args = list(i for i in input(
                 "Через пробел ввести координаты Строки и Столбца (отсчет от нуля): "
                 ).split())
+
+                if len(args) > 2:
+                    sys.exit(0)
+                args = [int(x) for x in args]
+                if args[0] >= self.rows or args[1] >=self.columns:
+                    sys.exit(0)
                 break
             except:
+                if "quit" in args:
+                    sys.exit(0)
                 print("Некорректный ввод!")
-        return a, b
+        return args
 
     def first_turn(self):
-        a,b = self.check_input()
-        self.get_mined(a, b)
+        a = self.check_input()
+        self.get_mined(a[0], a[1])
         self.count_mines()
-        self.open_field(a, b)
+        self.open_field(a[0], a[1])
         self.pr_field(self.mask_field)
 
 
@@ -117,8 +127,8 @@ class MineSweeper():
             self.end_game(flag)
             return 0
         while True:
-            a, b = self.check_input()
-            result = new_field.open_field(a, b)
+            a = self.check_input()
+            result = new_field.open_field(a[0], a[1])
             if result == False:
                 break
             self.pr_field(self.mask_field)
@@ -128,7 +138,7 @@ class MineSweeper():
                 break
 
 if __name__ == "__main__":
-    new_field = MineSweeper(10,10,15)
+    new_field = MineSweeper(5,5,5)
     new_field.game()
 
 
